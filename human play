@@ -1,0 +1,163 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int n;
+    int movec = 0;
+    int counter, counter2, counter3 = 0;
+    bool m = false;
+    int play[10000], play2[10000];
+
+
+    //enter the size of the board
+    while(!m){
+        cout << "please enter the board size" << endl;
+        cin >> n;
+        if(n%2 == 1 && n != 1){
+            m = true;
+        }
+    }
+    m = false;
+
+
+    //make the board
+    int a[n];
+    a[n/2] = 0;
+    for(counter = 0; counter <= n/2-1; counter++){
+        a[counter] = 1;
+    }
+    for(counter = n/2+1; counter < n; counter++){
+        a[counter] = 2;
+    }
+
+
+    //output the board
+    for(counter2 = 0; counter2 < n; counter2++){
+        if(counter2 > 8){
+            cout << counter2+1 << " ";
+        }
+        else{
+            cout << counter2+1 << "  ";
+        }
+    }
+    cout << endl;
+    for(counter2 = 0; counter2 < n; counter2++){
+        if(a[counter2] == 1){
+            cout << "T  ";
+        }
+        if(a[counter2] == 2){
+            cout << "F  ";
+        }
+        if(a[counter2] == 0){
+            cout << "-  ";
+        }
+    }
+    cout << endl;
+
+
+    //game loop
+    while(!m){
+        //update the move
+        movec++;
+        cout << "move: " << movec << endl;
+
+        //move loop
+        while(!m){
+            //enter the move
+            cout << "please enter your move(0 is undo)" << endl;
+            cin >> counter;
+            counter--;
+            //check if the move is legal
+            if(a[counter] == 1){
+                if(a[counter+1] == 0 || a[counter+2] == 0){
+                    m = true;
+                }
+            }
+            else if(a[counter] == 2){
+                if(a[counter-1] == 0 || a[counter-2] == 0){
+                    m = true;
+                }
+            }
+            else if(counter == -1 && counter3 != 0){
+                m = true;
+            }
+        }
+
+        //check if the player wants to undo
+        if(counter == -1){
+            //update the board
+            for(counter2 = 0; counter2 < n; counter2++){
+               if(a[counter2] == 0){
+                a[counter2] = play2[counter3-1];
+                break;
+               }
+            }
+               a[play[counter3-1]] = 0;
+            //update some variable
+            counter3--;
+            movec -= 2;
+        }
+        else{
+            //where is the empty space
+            for(counter2 = 0; counter2 < n; counter2++){
+                if(a[counter2] == 0){
+                    play[counter3] = counter2;
+                }
+            }
+            //update the play
+            play2[counter3] = a[counter];
+            counter3++;
+            //update the board
+            for(counter2 = 0; counter2 < n; counter2++){
+                if(a[counter2] == 0){
+                    a[counter2] = a[counter];
+                    break;
+                }
+            }
+            a[counter] = 0;
+        }
+
+        //check if the game is end
+        if(a[n/2] != 0){
+            m = false;
+        }
+        for(counter2 = 0; counter2 <= n/2-1; counter2++){
+            if (a[counter2] != 2){
+                m = false;
+            }
+        }
+
+        //output the board
+        cout << endl;
+        for(counter2 = 0; counter2 < n; counter2++){
+            if(counter2 > 8){
+                cout << counter2+1 << " ";
+            }
+            else{
+                cout << counter2+1 << "  ";
+            }
+        }
+        cout << endl;
+        for(counter2 = 0; counter2 < n; counter2++){
+            if(a[counter2] == 1){
+                cout << "T  ";
+            }
+            if(a[counter2] == 2){
+                cout << "F  ";
+            }
+            if(a[counter2] == 0){
+                cout << "-  ";
+            }
+        }
+        cout << endl;
+    }
+
+
+    //output the result
+    cout << "good job! you got it in " << movec << " times" << endl;
+
+
+    return 0;
+}
